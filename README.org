@@ -1,0 +1,40 @@
+#+title: WebGL 3D Scene Implementing Phong Shading
+
+#+NAME: Floating Coin
+#+CAPTION: Illustrates a floating spinning coin, various light sources, and textured objects
+
+
+[[./figure/snapshot.png]]
+
+** Running
+   #+begin_src bash
+git clone https://github.com/LewisCollum/webgl_3dscene.git
+cd webgl_3dscene
+python -m http.server --directory .
+   #+end_src
+   Then in your browser, go to [[http://localhost:8000/]]. The scene should appear.
+  
+** User Interaction
+   - =W, A, S, D=: Move Camera
+   - =R=: Increase Coin Rotation Speed
+   - =Mouse Click on tab=: Interact with lighting menu.
+
+** Source
+   - [[./src/PlyLoader.js][PlyLoader]], [[./src/ObjLoader.js][ObjLoader]]: parses model files into vertices, texture coordinates, normals, and indices. We use Blender to create/import a mesh and then export that mesh as a PLY. Once exported from Blender, we import it to our WebGL code with PlyLoader.
+   - [[./scene.js][Scene]]: holds all objects in our scene, including lights, meshes, and the camera. These objects (and their properties, e.g. "material") are tied to the shaders using SceneImporter.
+   - [[./src/SceneImporter.js][SceneImporter]]: recursively add objects from the [[./scene.js][scene]] file. It generates a list of callables that the [[./src/Drawer.js][Drawer]] uses to render each object in the [[./scene.js][scene]] file.
+   - [[./src/Drawer.js][Drawer]]: iterates a list of callables (from the "SceneImporter") and runs each callable, to render the scene.
+   - [[./src/form.js][form]], [[./src/matrix.js][matrix]], [[./src/vector.js][vector]]: files for matrix/vector operations.
+   - [[./src/FrameDispatcher.js][FrameDispatcher]]: Users can add a listener to the FrameDispatcher which includes their game/scene logic (in [[./main.js]]). Users can also control the frame rate.
+** Lighting:
+   There are 2 point and 1 directional light sources implemented.
+   - Point source 1: can be turned on/off in the interactive light menu.
+   - Point source 2: sways back and forth by varying the x coordinate.
+   - Directional: can be turned on/off in the interactive light menu.
+
+** Meshes
+   - Coin: uses material, many polyhedra
+   - Grass: uses material, many polyhedra
+   - Wall: textured, one polyhedra
+   - Ground: textured
+
